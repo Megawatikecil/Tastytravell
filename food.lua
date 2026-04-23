@@ -1,3 +1,89 @@
+local file = "/sdcard/Android/.riff_lock"
+local validKeys = {
+    ["RIFF123"] = true,
+    ["VIP999"] = true,
+    ["FREE01"] = true
+}
+--==========================================--
+
+-- Encode sederhana
+function enc(s)
+    local r = ""
+    for i = 1, #s do
+        r = r .. string.char(string.byte(s, i) + 2)
+    end
+    return r
+end
+
+function dec(s)
+    local r = ""
+    for i = 1, #s do
+        r = r .. string.char(string.byte(s, i) - 2)
+    end
+    return r
+end
+
+-- Ambil ID device
+function getID()
+    local info = gg.getTargetInfo()
+    return info.packageName .. "_" .. info.versionCode
+end
+
+-- Cek file
+function exists(path)
+    local f = io.open(path, "r")
+    if f then f:close() return true end
+    return false
+end
+
+-- Simpan
+function save(data)
+    local f = io.open(file, "w")
+    f:write(enc(data))
+    f:close()
+end
+
+-- Load
+function loadData()
+    local f = io.open(file, "r")
+    local d = f:read("*a")
+    f:close()
+    return dec(d)
+end
+
+-- Input key
+function inputKey()
+    local k = gg.prompt({"🔑 Input KEY:"}, {""}, {"text"})
+    if not k then os.exit() end
+    return k[1]
+end
+
+--================= LOGIN =================--
+local device = getID()
+
+if not exists(file) then
+    local key = inputKey()
+
+    if not validKeys[key] then
+        gg.alert("❌ KEY WRONG!")
+        os.exit()
+    end
+
+    save(key .. "|" .. device)
+    gg.alert("✅ Login succes")
+
+else
+    local data = loadData()
+    local k, d = data:match("(.+)|(.+)")
+
+    if d ~= device then
+        gg.alert("❌ Script only for 1 device!")
+        os.exit()
+    end
+
+    gg.toast("✅ Welcome back!")
+end
+
 local Date = gg.makeRequest("http://www.whatismyip.org/")
 if (Date == "The user did not allow access to the Internet.") then
     return
