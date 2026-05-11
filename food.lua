@@ -216,8 +216,8 @@ libstart=gg.getRangesList('libil2cpp.so')[2].start
 --_OnClickDebugBtn 0x39EC694
 --_OnClickGemAddBtn 0x39EC854
 patch={}
-patch[1]={address=libstart+0x3357A4C,flags=4,value='~A8 B [PC,#-0x1C0]'}
-patch[2]={address=libstart+4+0x3357A4C,flags=4,value='~A8 RET'}
+patch[1]={address=libstart+0x33FDF0C,flags=4,value='~A8 B [PC,#-0x1C0]'}
+patch[2]={address=libstart+4+0x33FDF0C,flags=4,value='~A8 RET'}
 
 gg.setValues(patch)
 
